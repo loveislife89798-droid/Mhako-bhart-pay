@@ -290,7 +290,7 @@
         © 2026 Mhako Bhart Pay. All Rights Reserved. "हर पेमेंट, हर सेवा — एक जगह"
     </div>
 
-    <!-- Razorpay Scripts -->
+        <!-- Razorpay Scripts -->
     <script src="https://razorpay.com"></script>
     <script>
         let currentService = 'mobile';
@@ -309,3 +309,102 @@
             const operatorSelect = document.getElementById('operator');
             const amountGroup = document.getElementById('amount-group');
 
+            operatorGroup.style.display = "block";
+            amountGroup.style.display = "block";
+
+            if (service === 'mobile') {
+                formTitle.innerText = "मोबाइल रिचार्ज";
+                numberLabel.innerText = "मोबाइल नंबर दर्ज करें";
+                numberIcon.className = "fa-solid fa-phone";
+                inputField.placeholder = "10 अंकों का नंबर डालें";
+                operatorSelect.innerHTML = `<option value="Jio">Jio</option><option value="Airtel">Airtel</option><option value="Vi">Vi</option><option value="BSNL">BSNL</option>`;
+            } else if (service === 'dth') {
+                formTitle.innerText = "DTH रिचार्ज";
+                numberLabel.innerText = "DTH कस्टमर ID दर्ज करें";
+                numberIcon.className = "fa-solid fa-tv";
+                inputField.placeholder = "DTH कस्टमर ID डालें";
+                operatorSelect.innerHTML = `<option value="TataPlay">Tata Play</option><option value="DishTV">Dish TV</option><option value="AirtelTV">Airtel Digital TV</option><option value="d2h">Videocon d2h</option>`;
+            } else if (service === 'electricity') {
+                formTitle.innerText = "बिजली बिल भुगतान";
+                numberLabel.innerText = "उपभोक्ता संख्या (K Number)";
+                numberIcon.className = "fa-solid fa-bolt";
+                inputField.placeholder = "बिजली बिल अकाउंट नंबर डालें";
+                operatorGroup.style.display = "none";
+            } else if (service === 'broadband') {
+                formTitle.innerText = "ब्रॉडबैंड बिल भुगतान";
+                numberLabel.innerText = "अकाउंट नंबर / लैंडलाइन नंबर";
+                numberIcon.className = "fa-solid fa-wifi";
+                inputField.placeholder = "ब्रॉडबैंड अकाउंट नंबर डालें";
+                operatorSelect.innerHTML = `<option value="BSNL">BSNL Broadband</option><option value="JioFiber">JioFiber</option><option value="AirtelXstream">Airtel Xstream</option>`;
+            } else if (service === 'fastag') {
+                formTitle.innerText = "FASTag रिचार्ज";
+                numberLabel.innerText = "वाहन नंबर (Vehicle Number)";
+                numberIcon.className = "fa-solid fa-car";
+                inputField.placeholder = "उदाहरण: RJ46XX1234";
+                operatorSelect.innerHTML = `<option value="SBI">SBI FASTag</option><option value="Paytm">Paytm FASTag</option><option value="HDFC">HDFC FASTag</option>`;
+            } else if (service === 'money') {
+                formTitle.innerText = "मनी ट्रांसफर";
+                numberLabel.innerText = "बैंक खाता नंबर";
+                numberIcon.className = "fa-solid fa-university";
+                inputField.placeholder = "Account Number दर्ज करें";
+                operatorLabel.innerText = "बैंक चुनें";
+                operatorSelect.innerHTML = `<option value="SBI">State Bank of India</option><option value="BOB">Bank of Baroda</option><option value="PNB">Punjab National Bank</option>`;
+            } else if (service === 'aeps') {
+                formTitle.innerText = "AEPS (आधार भुगतान)";
+                numberLabel.innerText = "आधार कार्ड नंबर";
+                numberIcon.className = "fa-solid fa-fingerprint";
+                inputField.placeholder = "12 अंकों का आधार नंबर डालें";
+                operatorLabel.innerText = "लिंक बैंक चुनें";
+                operatorSelect.innerHTML = `<option value="SBI">SBI</option><option value="BOB">BOB</option>`;
+            } else if (service === 'travel') {
+                formTitle.innerText = "टिकट बुकिंग";
+                numberLabel.innerText = "कहाँ से (From)";
+                numberIcon.className = "fa-solid fa-location-dot";
+                inputField.placeholder = "शहर का नाम";
+                operatorLabel.innerText = "कहाँ तक (To)";
+                operatorSelect.innerHTML = `<option value="Delhi">Delhi</option><option value="Jaipur">Jaipur</option><option value="Ahmedabad">Ahmedabad</option>`;
+            } else if (service === 'portal') {
+                formTitle.innerText = "रिटेलर पोर्टल";
+                numberLabel.innerText = "यूजर ID";
+                numberIcon.className = "fa-solid fa-user";
+                inputField.placeholder = "यूजर ID दर्ज करें";
+                operatorGroup.style.display = "none";
+                amountGroup.style.display = "none";
+            }
+        }
+
+        function handleAction() {
+            const inputVal = document.getElementById('accountInput').value;
+            const amtVal = document.getElementById('amount').value;
+
+            if (currentService === 'portal') {
+                alert("पोर्टल लॉगिन सिस्टम को लाइव API से जोड़ा जाना बाकी है।");
+                return;
+            }
+
+            if(!inputVal || (currentService !== 'travel' && !amtVal)) {
+                alert("कृपया सभी आवश्यक बॉक्स भरें!");
+                return;
+            }
+
+            // Razorpay Live Setup
+            var options = {
+                "key": "rzp_live_TVw3z0nKLpat5Q", 
+                "amount": amtVal * 100, 
+                "currency": "INR",
+                "name": "Mhako Bhart Pay",
+                "description": currentService.toUpperCase() + " Service",
+                "image": "https://flaticon.com",
+                "handler": function (response){
+                    alert("भुगतान सफल रहा! ट्रांजैक्शन ID: " + response.razorpay_payment_id);
+                },
+                "theme": {
+                    "color": "#2c5364"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        }
+    </script>
+</body>
+</html>
